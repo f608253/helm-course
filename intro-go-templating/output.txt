@@ -26,3 +26,18 @@ apiVersion: v2
 name: intro-go-templating
 version: 0.1.0
 appVersion: 0.1.0
+
+Now , when we run the below command , the helm command renders the values.yaml and template files and provide the resultant helm manifests templates as below:
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/intro-go-templating (main)
+$ helm template .
+---
+# Source: intro-go-templating/templates/sandbox.yaml
+# I am a YAML comment, and I will remain in the generated YAML
+test: I-am-a-string
+labels:
+  app: release-name
+  chart: intro-go-templating
+  environment: production
+  build: stable
+  public-ingress: true
