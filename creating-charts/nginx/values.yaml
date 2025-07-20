@@ -1,5 +1,5 @@
 ## @param replicaCount Number of Nginx replicas to deploy
-replicaCount: 3
+replicaCount: 1
 
 ## Settings for NGINX image
 ##
@@ -7,7 +7,7 @@ replicaCount: 3
 ## @param image.tag Nginx image tag to use
 image:
   name: nginx
-  tag: '1.27.0'
+  tag: '1-alpine3.22-perl'
 
 ## NGINX container ports
 ##
@@ -22,5 +22,5 @@ containerPorts:
 ## @param service.port The port where the service is receiving requests
 service:
   enabled: true
-  type: ClusterIP
+  type: NodePort
   port: 80
