@@ -1,1 +1,28 @@
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/intro-go-templating (main)
+$ pwd
+/d/PycharmProjects/helm-learning/helm-course/intro-go-templating
 
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/intro-go-templating (main)
+$ ls -lrt
+total 2
+-rw-r--r-- 1 MANVENDRA 197121 78 Jul 19 13:22 Chart.yaml
+-rw-r--r-- 1 MANVENDRA 197121 46 Jul 20 16:23 values.yaml
+drwxr-xr-x 1 MANVENDRA 197121  0 Jul 20 16:23 templates/
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/intro-go-templating (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/intro-go-templating (main)
+$ cat values.yaml 
+test: I am a string
+environment: production
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/intro-go-templating (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/intro-go-templating (main)
+$ cat Chart.yaml
+apiVersion: v2
+name: intro-go-templating
+version: 0.1.0
+appVersion: 0.1.0
