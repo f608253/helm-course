@@ -61,3 +61,6 @@ labels:
   environment: production
   build: stable
   public-ingress: true
+
+Summary:
+Your Helm template uses values from values.yaml and Go templating logic to generate a YAML file with dynamic content, including string manipulation and conditional logic. The output reflects your input values and the template’s logic.
