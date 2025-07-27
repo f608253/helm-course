@@ -1,0 +1,25 @@
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+---
+# Source: templating-deep-dive/templates/sandbox.yaml
+list:
+  - 1
+  - 2
+  - 3
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list:
+  - 1
+  - 2
+  - 3
