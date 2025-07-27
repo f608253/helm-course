@@ -92,3 +92,160 @@ list:
 
 MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
 $
+
+$ echo "Now we will add dict function in the template yaml file"
+Now we will add dict function in the template yaml file
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+
+#Lets change the list and values like below.
+list:
+  values:
+    example: {{ toYaml (list 1 2 3) | nindent 6 }}
+
+my-dict: {{ dict "key1" "value1" "key2" "value2" | toYaml | nindent 2 }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+---
+# Source: templating-deep-dive/templates/sandbox.yaml
+list:
+  - 1
+  - 2
+  - 3
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list:
+  - 1
+  - 2
+  - 3
+
+#Lets change the list and values like below.
+list:
+  values:
+    example:
+      - 1
+      - 2
+      - 3
+
+my-dict:
+  key1: value1
+  key2: value2
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+
+#Lets change the list and values like below.
+list:
+  values:
+    example: {{ toYaml (list 1 2 3) | nindent 6 }}
+
+my-dict: {{ dict "key1" "value1" "key2" "value2" | toYaml | nindent 2 }}
+
+my-dict2: {{ dict "primitive" "mystring" "complex" (dict "key1" "value1" "key2" "value2" | nindent 2 ) }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+Error: template: templating-deep-dive/templates/sandbox.yaml:14:99: executing "templating-deep-dive/templates/sandbox.yaml" at <2>: wrong type for value; expected string; got map[string]interface {}
+
+Use --debug flag to render out invalid YAML
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+
+#Lets change the list and values like below.
+list:
+  values:
+    example: {{ toYaml (list 1 2 3) | nindent 6 }}
+
+my-dict: {{ dict "key1" "value1" "key2" "value2" | toYaml | nindent 2 }}
+
+my-dict2: {{ dict "primitive" "mystring" "complex" (dict "key1" "value1" "key2" "value2") | nindent 2 }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+Error: template: templating-deep-dive/templates/sandbox.yaml:14:100: executing "templating-deep-dive/templates/sandbox.yaml" at <2>: wrong type for value; expected string; got map[string]interface {}
+
+Use --debug flag to render out invalid YAML
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+
+#Lets change the list and values like below.
+list:
+  values:
+    example: {{ toYaml (list 1 2 3) | nindent 6 }}
+
+my-dict: {{ dict "key1" "value1" "key2" "value2" | toYaml | nindent 2 }}
+
+my-dict2: {{ dict "primitive" "mystring" "complex" (dict "key1" "value1" "key2" "value2") | toYaml | nindent 2 }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+---
+# Source: templating-deep-dive/templates/sandbox.yaml
+list:
+  - 1
+  - 2
+  - 3
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list:
+  - 1
+  - 2
+  - 3
+
+#Lets change the list and values like below.
+list:
+  values:
+    example:
+      - 1
+      - 2
+      - 3
+
+my-dict:
+  key1: value1
+  key2: value2
+
+my-dict2:
+  complex:
+    key1: value1
+    key2: value2
+  primitive: mystring
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
