@@ -255,5 +255,152 @@ my-dict2:
 
 MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
 
+====================================================================================================
+Now, we want end users to they can provide a custom resource name , if they dont provide anything then its default resource name and if they provide the custom name , then the resourcename will be created as custom name.
+
+Let say in values.yaml we define the customName empty string:
+
+cat values.yaml
+## @param replicaCount Number of Nginx replicas to deploy
+replicaCount: 1
+
+customName: ''
+
+## Settings for NGINX image
+##
+## @param image.name Nginx image name to use
+## @param image.tag Nginx image tag to use
+image:
+  name: nginx
+  tag: '1-alpine3.22-perl'
+
+## NGINX container ports
+##
+## @param containerPorts.http
+containerPorts:
+  http: 80
+
+## Settings for NGINX service
+##
+## @param service.enabled Whether to deploy the service altogether or not
+## @param service.type The type of service in front of the Nginx pods
+## @param service.port The port where the service is receiving requests
+service:
+  enabled: false
+  type: NodePort
+  port: 80
+
+Above will produce below output:
+$ helm template .
+---
+# Source: templating-deep-dive/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-templating-deep-dive
+  labels:
+    app: templating-deep-dive
+    release: release-name
+    managed-by: "helm"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: templating-deep-dive
+      release: release-name
+      managed-by: "helm"
+  template:
+    metadata:
+      labels:
+        app: templating-deep-dive
+        release: release-name
+        managed-by: "helm"
+    spec:
+      containers:
+        - name: nginx
+          image: "nginx:1-alpine3.22-perl"
+---
+
+Now, let say user has given some customeName:
+
+$ cat values.yaml 
+## @param replicaCount Number of Nginx replicas to deploy
+replicaCount: 1
+
+customName: 'myCustomeResourcecName'
+
+## Settings for NGINX image
+##
+## @param image.name Nginx image name to use
+## @param image.tag Nginx image tag to use
+image:
+  name: nginx
+  tag: '1-alpine3.22-perl'
+
+## NGINX container ports
+##
+## @param containerPorts.http
+containerPorts:
+  http: 80
+
+## Settings for NGINX service
+##
+## @param service.enabled Whether to deploy the service altogether or not
+## @param service.type The type of service in front of the Nginx pods
+## @param service.port The port where the service is receiving requests
+service:
+  enabled: false
+  type: NodePort
+  port: 80
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+---
+# Source: templating-deep-dive/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myCustomeResourcecName
+  labels:
+    app: templating-deep-dive
+    release: release-name
+    managed-by: "helm"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: templating-deep-dive
+      release: release-name
+      managed-by: "helm"
+  template:
+    metadata:
+      labels:
+        app: templating-deep-dive
+        release: release-name
+        managed-by: "helm"
+    spec:
+      containers:
+        - name: nginx
+          image: "nginx:1-alpine3.22-perl"
+
+The named template file is same for both the cases , so based on condition the above 2 outputs are rendered.
+
+$ cat templates/_helpers.tpl 
+{{- define "templating-deep-dive.fullname" -}}
+{{- $defaultName := printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- .Values.customName | default $defaultName | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- define "templating-deep-dive.selectorLabels" -}}
+app: {{ .Chart.Name }}
+release: {{ .Release.Name }}
+managed-by: "helm"
+{{- end -}}
+
+
+====================================================================================================
+
 
 
