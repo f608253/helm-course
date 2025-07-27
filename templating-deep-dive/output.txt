@@ -23,3 +23,72 @@ list:
   - 1
   - 2
   - 3
+
+$ echo "Lets change the list and values like below"
+Lets change the list and values like below
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+
+#Lets change the list and values like below.
+list:
+  values:
+    example: {{ toYaml (list 1 2 3) | nindent 2 }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+Error: YAML parse error on templating-deep-dive/templates/sandbox.yaml: error converting YAML to JSON: yaml: line 16: did not find expected key
+
+Use --debug flag to render out invalid YAML
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+
+#Lets change the list and values like below.
+list:
+  values:
+    example: {{ toYaml (list 1 2 3) | nindent 6 }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template .
+---
+# Source: templating-deep-dive/templates/sandbox.yaml
+list:
+  - 1
+  - 2
+  - 3
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list:
+  - 1
+  - 2
+  - 3
+
+#Lets change the list and values like below.
+list:
+  values:
+    example:
+      - 1
+      - 2
+      - 3
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
