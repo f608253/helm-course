@@ -72,4 +72,188 @@ $ cat _helpers.tpl
 MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive/templates (main)
 $
 
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ ls -lrt
+total 2
+-rw-r--r-- 1 MANVENDRA 197121  79 Jul 19 13:22 Chart.yaml
+-rw-r--r-- 1 MANVENDRA 197121 657 Jul 27 13:58 values.yaml
+drwxr-xr-x 1 MANVENDRA 197121   0 Jul 27 14:42 templates
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ ls -lrt templates/
+total 3
+-rw-r--r-- 1 MANVENDRA 197121 569 Jul 27 10:55 sandbox.yaml
+-rw-r--r-- 1 MANVENDRA 197121 253 Jul 27 14:39 _helpers.tpl
+-rw-r--r-- 1 MANVENDRA 197121 645 Jul 27 14:42 deployment.yaml
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat Chart.yaml 
+apiVersion: v2
+name: templating-deep-dive
+version: 0.1.0
+appVersion: 0.1.0
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat values.yaml 
+## @param replicaCount Number of Nginx replicas to deploy
+replicaCount: 1
+
+## Settings for NGINX image
+##
+## @param image.name Nginx image name to use
+## @param image.tag Nginx image tag to use
+image:
+  name: nginx
+  tag: '1-alpine3.22-perl'
+
+## NGINX container ports
+##
+## @param containerPorts.http
+containerPorts:
+  http: 80
+
+## Settings for NGINX service
+##
+## @param service.enabled Whether to deploy the service altogether or not
+## @param service.type The type of service in front of the Nginx pods
+## @param service.port The port where the service is receiving requests
+service:
+  enabled: true
+  type: NodePort
+  port: 80
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/_helpers.tpl 
+{{- define "templating-deep-dive.fullname" -}}
+{{- printf "%s-_%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- define "templating-deep-dive.selectorLabels" -}}
+app: {{ .Chart.Name }}
+release: {{ .Release.Name }}
+{{- end -}}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/deployment.yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "templating-deep-dive.fullname" . }}
+  labels: {{ include "templating-deep-dive.selectorLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: nginx
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.containerPorts.http }}
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ cat templates/sandbox.yaml 
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }}
+
+#Lets change the list and values like below.
+list:
+  values:
+    example: {{ toYaml (list 1 2 3) | nindent 6 }}
+
+my-dict: {{ dict "key1" "value1" "key2" "value2" | toYaml | nindent 2 }}
+
+my-dict2: {{ dict "primitive" "mystring" "complex" (dict "key1" "value1" "key2" "value2") | toYaml | nindent 2 }}
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+$ helm template . --debug
+install.go:225: 2025-07-27 16:34:05.5815386 +0530 IST m=+0.050644701 [debug] Original chart version: ""
+install.go:242: 2025-07-27 16:34:05.5815386 +0530 IST m=+0.050644701 [debug] CHART PATH: D:\PycharmProjects\helm-learning\helm-course\templating-deep-dive
+
+---
+# Source: templating-deep-dive/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-_templating-deep-dive
+  labels:
+    app: templating-deep-dive
+    release: release-name
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: templating-deep-dive
+      release: release-name
+  template:
+    metadata:
+      labels:
+        app: templating-deep-dive
+        release: release-name
+    spec:
+      containers:
+        - name: nginx
+          image: "nginx:1-alpine3.22-perl"
+          ports:
+            - containerPort: 80
+---
+# Source: templating-deep-dive/templates/sandbox.yaml
+list:
+  - 1
+  - 2
+  - 3
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list:
+  - 1
+  - 2
+  - 3
+
+#Lets change the list and values like below.
+list:
+  values:
+    example:
+      - 1
+      - 2
+      - 3
+
+my-dict:
+  key1: value1
+  key2: value2
+
+my-dict2:
+  complex:
+    key1: value1
+    key2: value2
+  primitive: mystring
+
+MANVENDRA@MANAV-PC MINGW64 /d/PycharmProjects/helm-learning/helm-course/templating-deep-dive (main)
+
+
 
