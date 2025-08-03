@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "python-flask-rest-api-project.fullname" . }}-config
+data:
+  # Example key-value pairs
+  MY_CONFIG_KEY: {{ .Values.myConfigKey | quote }}
+  ANOTHER_KEY: {{ .Values.anotherKey | quote }}

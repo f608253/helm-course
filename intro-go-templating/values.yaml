@@ -1,2 +1,2 @@
 test: I am a string
-environment: staging
+environment: production

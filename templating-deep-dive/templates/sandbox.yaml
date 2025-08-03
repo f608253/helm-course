@@ -1,5 +1,14 @@
+list: {{ toYaml (list 1 2 3) | nindent 2 }}
+
+#Above is a Helm template that uses the `toYaml` function to convert a list into YAML format, and `nindent` to indent it by 2 spaces.
+#Above can also be written as:
+list: {{ list 1 2 3 | toYaml | nindent 2 }} 
+
+#Lets change the list and values like below.
 list:
   values:
-    example: {{ list 1 2 3 | toYaml | nindent 6 }}
+    example: {{ toYaml (list 1 2 3) | nindent 6 }}
 
-my-dict: {{ dict "primitive" "my string" "complex" (dict "key1" "value1") | toYaml | nindent 2 }}
+my-dict: {{ dict "key1" "value1" "key2" "value2" | toYaml | nindent 2 }}
+
+my-dict2: {{ dict "primitive" "mystring" "complex" (dict "key1" "value1" "key2" "value2") | toYaml | nindent 2 }}

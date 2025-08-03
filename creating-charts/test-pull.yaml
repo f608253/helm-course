@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pull
+spec:
+  containers:
+  - name: test
+    image: f608253/python-flask-app-rest-api-project:python-project
+    imagePullPolicy: Always
+  imagePullSecrets:
+  - name: regcred
